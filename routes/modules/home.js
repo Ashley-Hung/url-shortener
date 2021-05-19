@@ -19,4 +19,14 @@ router.post('/shortUrls', async (req, res) => {
   await Url.create({ full: fullUrl, short: shortUrl })
   res.redirect('/')
 })
+
+router.get('/:shortUrl', (req, res) => {
+  const { shortUrl } = req.params
+  console.log(req.params)
+  Url.findOne({ short: shortUrl }).then(url => {
+    url.save()
+    res.redirect(url.full)
+  })
+})
+
 module.exports = router
