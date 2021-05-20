@@ -3,6 +3,7 @@ const Url = require('../../models/url')
 const shrinkUrl = require('../../public/javascripts/shrinkUrl')
 const router = express.Router()
 
+// home page
 router.get('/', (req, res) => {
   return Url.find()
     .lean()
@@ -11,6 +12,7 @@ router.get('/', (req, res) => {
     })
 })
 
+// generate shorten Url
 router.post('/shortUrls', async (req, res) => {
   const { fullUrl } = req.body
   const shortUrl = shrinkUrl()

@@ -1,3 +1,4 @@
+/* Shorten URL */
 function sample(collection) {
   const index = Math.floor(Math.random() * collection.length)
   return collection[index]
@@ -27,6 +28,14 @@ function shrinkUrl() {
   }
 
   return shortUrl
+}
+
+/* Copy URL function */
+function copyUrl() {
+  const copyUrl = document.querySelector('#shortUrl')
+  copyUrl.select()
+  document.execCommand('copy')
+  alert(`Copied the URL：${copyUrl.value}`)
 }
 
 module.exports = shrinkUrl
