@@ -1,5 +1,4 @@
 const express = require('express')
-const { find } = require('../../models/url')
 const Url = require('../../models/url')
 const shrinkUrl = require('../../public/javascripts/shrinkUrl')
 const router = express.Router()
@@ -25,6 +24,7 @@ router.get('/:shortUrl', (req, res) => {
   Url.findOne({ short: shortUrl })
     .lean()
     .then(url => {
+      console.log(url.full)
       res.redirect(url.full)
     })
     .catch(err => console.log(err))
