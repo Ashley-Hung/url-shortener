@@ -11,15 +11,21 @@ router.get('/', (req, res) => {
     })
 })
 
-router.post('/shortUrls', (req, res) => {
+router.post('/shortUrls', async (req, res) => {
   const { fullUrl } = req.body
+  const shortUrl = shrinkUrl()
 
-  Url.create({ full: fullUrl, short: shrinkUrl() })
-  res.redirect('/')
+  await Url.create({ full: fullUrl, short: shortUrl })
+  Url.find()
+    .lean()
+    .then(url => {
+      res.render('index', { shortUrl, fullUrl, url })
+    })
 })
 
-router.get('/:shortUrl', (req, res) => {
-  const { shortUrl } = req.params
+// 連到原始網站
+router.get('/s/:shortUrl', (req, res) => {
+  let { shortUrl } = req.params
 
   Url.findOne({ short: shortUrl })
     .lean()
