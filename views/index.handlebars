@@ -1,9 +1,12 @@
 <div class="container my-5">
   <h1 class="text-center">URL Shortener</h1>
-  <form action="/shortUrls" method="post" class="my-4 form-inline">
+  <form action="/shortUrls" method="post" class="my-4 form-inline" novalidate>
     <label for="fullUrl" class="mr-2 col-2">Full URL：</label>
-    <input type="url" name="fullUrl" id="fullUrl" placeholder=" Shorten your link" class="form-control col mr-2" {{#if fullUrl}}value="{{fullUrl}}"{{/if}} required>
+    <input type="url" name="fullUrl" id="fullUrl" placeholder=" Shorten your link" class="form-control col mr-2 {{#if error}}is-invalid{{/if}}" {{#if fullUrl}}value="{{fullUrl}}"{{/if}} required>
     <button type="submit" class="btn btn-primary col-1">Shorten</button>
+    <div class="invalid-feedback text-center">
+      Please enter a valid URL.
+    </div>
   </form>
 
   <div class="form-inline">

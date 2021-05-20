@@ -1,5 +1,6 @@
 const express = require('express')
 const Url = require('../../models/url')
+const urlExists = require('url-exists')
 const shrinkUrl = require('../../public/javascripts/shrinkUrl')
 const router = express.Router()
 
@@ -13,16 +14,30 @@ router.get('/', (req, res) => {
 })
 
 // generate shorten Url
-router.post('/shortUrls', async (req, res) => {
+router.post('/shortUrls', (req, res) => {
   const { fullUrl } = req.body
-  const shortUrl = shrinkUrl()
 
-  await Url.create({ full: fullUrl, short: shortUrl })
-  Url.find()
-    .lean()
-    .then(url => {
-      res.render('index', { shortUrl, fullUrl, url })
-    })
+  urlExists(fullUrl, async (err, exists) => {
+    console.log(fullUrl)
+    console.log(exists) // true or false
+    if (exists) {
+      const shortUrl = shrinkUrl()
+
+      await Url.create({ full: fullUrl, short: shortUrl })
+      Url.find()
+        .lean()
+        .then(url => {
+          res.render('index', { shortUrl, fullUrl, url })
+        })
+    } else {
+      Url.find()
+        .lean()
+        .then(url => {
+          const error = true
+          res.render('index', { url, error, fullUrl })
+        })
+    }
+  })
 })
 
 // 連到原始網站
