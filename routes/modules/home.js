@@ -12,21 +12,22 @@ router.get('/', (req, res) => {
     })
 })
 
-router.post('/shortUrls', async (req, res) => {
+router.post('/shortUrls', (req, res) => {
   const { fullUrl } = req.body
-  console.log(shrinkUrl())
-  const shortUrl = await shrinkUrl()
-  await Url.create({ full: fullUrl, short: shortUrl })
+
+  Url.create({ full: fullUrl, short: shrinkUrl() })
   res.redirect('/')
 })
 
 router.get('/:shortUrl', (req, res) => {
   const { shortUrl } = req.params
-  console.log(req.params)
-  Url.findOne({ short: shortUrl }).then(url => {
-    url.save()
-    res.redirect(url.full)
-  })
+
+  Url.findOne({ short: shortUrl })
+    .lean()
+    .then(url => {
+      res.redirect(url.full)
+    })
+    .catch(err => console.log(err))
 })
 
 module.exports = router
