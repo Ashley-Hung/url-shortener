@@ -2,6 +2,7 @@ const express = require('express')
 const Url = require('../../models/url')
 const urlExists = require('url-exists')
 const shrinkUrl = require('../../public/javascripts/shrinkUrl')
+const checkUrl = require('../../public/javascripts/checkUrl')
 const router = express.Router()
 
 // home page
@@ -18,10 +19,9 @@ router.post('/shortUrls', (req, res) => {
   const { fullUrl } = req.body
 
   urlExists(fullUrl, async (err, exists) => {
-    console.log(fullUrl)
-    console.log(exists) // true or false
     if (exists) {
-      const shortUrl = shrinkUrl()
+      let shortUrl = shrinkUrl()
+      shortUrl = await checkUrl(shortUrl)
 
       await Url.create({ full: fullUrl, short: shortUrl })
       Url.find()
