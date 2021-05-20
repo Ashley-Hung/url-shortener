@@ -24,13 +24,12 @@ router.post('/shortUrls', async (req, res) => {
 })
 
 // 連到原始網站
-router.get('/s/:shortUrl', (req, res) => {
+router.get('/:shortUrl', (req, res) => {
   let { shortUrl } = req.params
 
   Url.findOne({ short: shortUrl })
     .lean()
     .then(url => {
-      console.log(url.full)
       res.redirect(url.full)
     })
     .catch(err => console.log(err))
