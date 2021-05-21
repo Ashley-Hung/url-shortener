@@ -1,6 +1,6 @@
 # 短網址產生器
 
-這是一個由 Node.js 和 Express 建立的記賬網站。
+這是一個由 Node.js 和 Express 建立的短網址產生器。
 
 ## 主要功能
 
