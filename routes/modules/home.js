@@ -18,17 +18,40 @@ router.get('/', (req, res) => {
 router.post('/shortUrls', (req, res) => {
   const { fullUrl } = req.body
 
+  // 判斷是否為合法的網址
   urlExists(fullUrl, async (err, exists) => {
     if (exists) {
-      let shortUrl = shrinkUrl()
-      shortUrl = await checkUrl(shortUrl)
+      // valid url
+      // 判斷輸入的原始網址是否已存在資料庫內
+      const fullExists = await Url.exists({ full: fullUrl })
 
-      await Url.create({ full: fullUrl, short: shortUrl })
-      Url.find()
-        .lean()
-        .then(url => {
-          res.render('index', { shortUrl, fullUrl, url })
-        })
+      if (fullExists) {
+        // Url 已存在
+
+        // 找出已存在的短網址
+        const selectedUrl = await Url.findOne({ full: fullUrl })
+          .lean()
+          .then(url => {
+            return url
+          })
+
+        Url.find()
+          .lean()
+          .then(url => {
+            res.render('index', { shortUrl: selectedUrl.short, fullUrl: selectedUrl.full, url })
+          })
+      } else {
+        // Url 不存在
+        // 產生不重複的短網址
+        const shortUrl = await checkUrl(shrinkUrl())
+
+        await Url.create({ full: fullUrl, short: shortUrl })
+        Url.find()
+          .lean()
+          .then(url => {
+            res.render('index', { shortUrl, fullUrl, url })
+          })
+      }
     } else {
       Url.find()
         .lean()
@@ -40,8 +63,8 @@ router.post('/shortUrls', (req, res) => {
   })
 })
 
-// 連到原始網站
-router.get('/:shortUrl', (req, res) => {
+// 點擊表格中的縮網址，可連接到原始網站
+router.get('/s/:shortUrl', (req, res) => {
   let { shortUrl } = req.params
 
   Url.findOne({ short: shortUrl })
