@@ -18,8 +18,6 @@ router.get('/', (req, res) => {
 router.post('/shortUrls', (req, res) => {
   const { fullUrl } = req.body
 
-  console.log(fullUrl === '')
-
   // 判斷是否為合法的網址
   urlExists(fullUrl, async (err, exists) => {
     if (exists) {
