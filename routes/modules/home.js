@@ -1,8 +1,8 @@
 const express = require('express')
 const Url = require('../../models/url')
 const urlExists = require('url-exists')
-const shrinkUrl = require('../../public/javascripts/shrinkUrl')
-const checkUrl = require('../../public/javascripts/checkUrl')
+const shrinkUrl = require('../../tools/shrinkUrl')
+const checkUrl = require('../../tools/checkUrl')
 const router = express.Router()
 
 // home page
@@ -17,6 +17,8 @@ router.get('/', (req, res) => {
 // generate shorten Url
 router.post('/shortUrls', (req, res) => {
   const { fullUrl } = req.body
+
+  console.log(fullUrl === '')
 
   // 判斷是否為合法的網址
   urlExists(fullUrl, async (err, exists) => {
